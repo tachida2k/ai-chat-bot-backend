@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/otosei-ai/otosei-ai-backend/internal/api"
 	"github.com/otosei-ai/otosei-ai-backend/internal/config"
+	"github.com/otosei-ai/otosei-ai-backend/internal/llm"
 )
 
 func main() {
@@ -21,10 +22,13 @@ func main() {
 		log.Fatalf("Error loading config: %v", err)
 	}
 
+	// Initialize OpenRouter client
+	openRouterClient := llm.NewOpenRouterClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL, cfg.OpenRouterModel, cfg.OpenRouterFallbacks)
+
 	r := gin.Default()
 
 	// Register routes
-	api.RegisterRoutes(r)
+	api.RegisterRoutes(r, openRouterClient)
 
 	log.Println("Starting server on port", cfg.Port)
 	if err := r.Run(":" + cfg.Port); err != nil {

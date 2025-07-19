@@ -1,17 +1,12 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/otosei-ai/otosei-ai-backend/internal/llm"
 )
 
-func RegisterRoutes(r *gin.Engine) {
+func RegisterRoutes(r *gin.Engine, openRouterClient *llm.OpenRouterClient) {
 	// r.GET("/health", HealthCheckHandler)
 
-	r.GET("/chat", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Welcome to Otosei AI",
-		})
-	})
+	r.POST("/chat", ChatHandler(openRouterClient))
 }
