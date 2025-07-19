@@ -1,0 +1,49 @@
+# Binaries
+/app
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Go workspace stuff
+go.work
+go.work.sum
+
+# Dependency directories (if using vendoring)
+vendor/
+
+# Config and env
+.env
+.env.local
+.env.*.local
+
+# Logs and debug
+*.log
+nohup.out
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+*.tar
+docker-compose.override.yml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cache, build, coverage
+coverage/
+dist/
+tmp/
+bin/
+.cache/
+build/

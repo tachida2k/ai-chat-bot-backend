@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - PORT=${PORT}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL}
+      - REDIS_URL=redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@redis:${REDIS_PORT}
+      - REDIS_ADDR=redis:${REDIS_PORT}
+      - REDIS_USERNAME=${REDIS_USERNAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - POSTGRES_DSN=${POSTGRES_DSN}
+    volumes:
+      - ./logs:/logs:Z
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    command: >
+      --port ${REDIS_PORT} --requirepass ${REDIS_PASSWORD}
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+    volumes:
+      - redis_data:/data
+    restart: always
+
+volumes:
+  redis_data:
