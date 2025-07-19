@@ -7,7 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/otosei-ai/otosei-ai-backend/internal/api"
 	"github.com/otosei-ai/otosei-ai-backend/internal/config"
-	"github.com/otosei-ai/otosei-ai-backend/internal/llm"
+	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// Initialize OpenRouter client
-	openRouterClient := llm.NewOpenRouterClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL, cfg.OpenRouterModel, cfg.OpenRouterFallbacks)
+	openRouterClient := openrouter.NewClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL, cfg.OpenRouterModel, cfg.OpenRouterFallbacks)
 
 	r := gin.Default()
 
