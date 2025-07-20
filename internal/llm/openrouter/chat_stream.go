@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -55,10 +54,12 @@ func (c *OpenRouterClient) sendChatStreamRequest(ctx *gin.Context, messages []Me
 		return fmt.Errorf("non-200 response from OpenRouter: %d - %s", resp.StatusCode, string(body))
 	}
 
+	reader := io.Reader(resp.Body)
+	bufReader := NewEventReader(reader)
+
 	ctx.Stream(func(w io.Writer) bool {
-		buf := make([]byte, 4096)
 		for {
-			n, err := resp.Body.Read(buf)
+			event, err := bufReader.ReadEvent()
 			if err != nil {
 				if err == io.EOF {
 					return false
@@ -66,28 +67,25 @@ func (c *OpenRouterClient) sendChatStreamRequest(ctx *gin.Context, messages []Me
 				fmt.Println("Read error:", err)
 				return false
 			}
-			chunk := string(buf[:n])
-			for line := range strings.SplitSeq(chunk, "\n") {
-				if after, ok := strings.CutPrefix(line, "data: "); ok {
-					raw := after
-					if raw == "[DONE]" {
-						ctx.SSEvent("done", true)
-						return false
-					}
-					var parsed struct {
-						Choices []struct {
-							Delta struct {
-								Content string `json:"content"`
-							} `json:"delta"`
-						} `json:"choices"`
-					}
-					if err := json.Unmarshal([]byte(raw), &parsed); err == nil {
-						if content := parsed.Choices[0].Delta.Content; content != "" {
-							ctx.SSEvent("message", content)
-						}
-					}
+
+			if event == "[DONE]" {
+				ctx.SSEvent("done", true)
+				return false
+			}
+
+			var parsed ChatStreamResponse
+			if err := json.Unmarshal([]byte(event), &parsed); err != nil {
+				fmt.Println("Unmarshal error:", err)
+				continue
+			}
+
+			if len(parsed.Choices) > 0 {
+				content := parsed.Choices[0].Delta.Content
+				if content != "" {
+					ctx.SSEvent("message", content)
 				}
 			}
+			return true
 		}
 	})
 	return nil
