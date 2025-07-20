@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/otosei-ai/otosei-ai-backend/internal/api"
 	"github.com/otosei-ai/otosei-ai-backend/internal/config"
+	"github.com/otosei-ai/otosei-ai-backend/internal/database"
 	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
 )
 
@@ -21,6 +22,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading config: %v", err)
 	}
+
+	// Initialize Database
+	database.InitDB(cfg)
 
 	// Initialize OpenRouter client
 	openRouterClient := openrouter.NewClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL, cfg.OpenRouterModel, cfg.OpenRouterFallbacks)

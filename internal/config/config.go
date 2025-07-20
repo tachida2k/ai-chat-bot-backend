@@ -25,6 +25,15 @@ func LoadConfig() (*Config, error) {
 	redisHost := getEnv("REDIS_HOST", "localhost")
 	redisURL := fmt.Sprintf("redis://%s:%s@%s:%s", redisUsername, redisPassword, redisHost, redisPort)
 
+	pgHost := getEnv("POSTGRES_HOST", "localhost")
+	pgUser := getEnv("POSTGRES_USER", "user")
+	pgPassword := getEnv("POSTGRES_PASSWORD", "password")
+	pgDB := getEnv("POSTGRES_DB", "otosei")
+	pgPort := getEnv("POSTGRES_PORT", "5432")
+	postgresDSN := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
+		pgUser, pgPassword, pgHost, pgPort, pgDB,
+	)
+
 	config := &Config{
 		Port:                getEnv("PORT", "8080"),
 		OpenRouterAPIKey:    getEnv("OPENROUTER_API_KEY", ""),
@@ -35,7 +44,7 @@ func LoadConfig() (*Config, error) {
 		RedisPassword:       redisPassword,
 		RedisPort:           redisPort,
 		RedisURL:            redisURL,
-		PostgresDSN:         getEnv("POSTGRES_DSN", "postgres://user:password@localhost:5432/otosei"),
+		PostgresDSN:         postgresDSN,
 	}
 
 	return config, nil
