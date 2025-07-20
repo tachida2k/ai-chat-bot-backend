@@ -8,6 +8,7 @@ import (
 	"github.com/otosei-ai/otosei-ai-backend/internal/api"
 	"github.com/otosei-ai/otosei-ai-backend/internal/config"
 	"github.com/otosei-ai/otosei-ai-backend/internal/database"
+	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
 	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
 )
 
@@ -24,15 +25,23 @@ func main() {
 	}
 
 	// Initialize Database
-	database.InitDB(cfg)
+	db := database.InitDB(cfg)
+	userRepo := repositories.NewUserRepository(db)
+	messageRepo := repositories.NewMessageRepository(db)
 
 	// Initialize OpenRouter client
 	openRouterClient := openrouter.NewClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL, cfg.OpenRouterModel, cfg.OpenRouterFallbacks)
 
+	dependencies := api.Dependencies{
+		UserRepo:         userRepo,
+		MessageRepo:      messageRepo,
+		OpenRouterClient: openRouterClient,
+	}
+
 	r := gin.Default()
 
 	// Register routes
-	api.RegisterRoutes(r, openRouterClient)
+	api.RegisterRoutes(r, dependencies)
 
 	log.Println("Starting server on port", cfg.Port)
 	if err := r.Run(":" + cfg.Port); err != nil {
