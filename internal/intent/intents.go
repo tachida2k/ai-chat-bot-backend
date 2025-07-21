@@ -1,15 +1,13 @@
 package intent
 
-type IntentDefinition struct {
-	Name        string
+type IntentData struct {
 	Description string
 	Examples    []string
 	Keywords    []string
 }
 
-var IntentList = []IntentDefinition{
-	{
-		Name:        "swap_token",
+var IntentList = map[string]IntentData{
+	"swap_token": {
 		Description: "Executes a token swap from Coinhall Routes.",
 		Examples: []string{
 			"I want to trade SEI for USDT.",
@@ -24,8 +22,7 @@ var IntentList = []IntentDefinition{
 			"exchange my", "where can I swap", "how to swap",
 		},
 	},
-	{
-		Name:        "stake",
+	"stake": {
 		Description: "Stake SEI tokens to validator.",
 		Examples: []string{
 			"I want to stake my SEI tokens.",
@@ -37,8 +34,7 @@ var IntentList = []IntentDefinition{
 			"staking rewards", "staking pool",
 		},
 	},
-	{
-		Name:        "unstake",
+	"unstake": {
 		Description: "Unstake SEI tokens.",
 		Examples: []string{
 			"I want to unstake my SEI tokens.",
@@ -50,8 +46,7 @@ var IntentList = []IntentDefinition{
 			"remove stake", "stop staking", "withdraw staked", "exit staking",
 		},
 	},
-	{
-		Name:        "send_token",
+	"send_token": {
 		Description: "Send tokens to an EVM address.",
 		Examples: []string{
 			"Send 5 SEI to my friend.",
@@ -63,8 +58,7 @@ var IntentList = []IntentDefinition{
 			"send funds", "move tokens", "send crypto", "send to address",
 		},
 	},
-	{
-		Name:        "check_balance",
+	"check_balance": {
 		Description: "Check my wallet balance.",
 		Examples: []string{
 			"Check my wallet balance.",
@@ -76,8 +70,7 @@ var IntentList = []IntentDefinition{
 			"my tokens", "holdings", "how much sei", "current balance",
 		},
 	},
-	{
-		Name:        "tx_search",
+	"tx_search": {
 		Description: "Search for a transaction.",
 		Examples: []string{
 			"Find this transaction hash on Sei.",
@@ -87,8 +80,7 @@ var IntentList = []IntentDefinition{
 			"tx", "transaction", "txid", "tx hash", "check tx",
 		},
 	},
-	{
-		Name:        "analyze_wallet",
+	"analyze_wallet": {
 		Description: "Analyze wallet portfolio.",
 		Examples: []string{
 			"Analyze this SEI wallet.",
@@ -100,8 +92,7 @@ var IntentList = []IntentDefinition{
 			"wallet breakdown", "portfolio analysis",
 		},
 	},
-	{
-		Name:        "forbidden_topics",
+	"forbidden_topics": {
 		Description: "Topics unrelated to Sei or out of scope.",
 		Examples: []string{
 			"Write a Python script.",
@@ -113,8 +104,7 @@ var IntentList = []IntentDefinition{
 			"script", "trading bots", "smart contract", "chatgpt", "llama", "openai",
 		},
 	},
-	{
-		Name:        "default",
+	"default": {
 		Description: "Greetings, general questions about Sei.",
 		Examples: []string{
 			"Who is Sonia?",

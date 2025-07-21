@@ -11,6 +11,7 @@ type Config struct {
 	OpenRouterBaseURL   string
 	OpenRouterModel     string
 	OpenRouterFallbacks string
+	ConfidenceThreshold string
 	RedisUsername       string
 	RedisPassword       string
 	RedisPort           string
@@ -40,6 +41,7 @@ func LoadConfig() (*Config, error) {
 		OpenRouterBaseURL:   getEnv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1/chat/completions"),
 		OpenRouterModel:     getEnv("OPENROUTER_MODEL", "deepseek/deepseek-r1:free"),
 		OpenRouterFallbacks: getEnv("OPENROUTER_FALLBACKS", "deepseek/deepseek-chat-v3-0324:free,google/gemma-3n-e2b-it:free"),
+		ConfidenceThreshold: getEnv("CONFIDENCE_THRESHOLD", "0.7"),
 		RedisUsername:       redisUsername,
 		RedisPassword:       redisPassword,
 		RedisPort:           redisPort,

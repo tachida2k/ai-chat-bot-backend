@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/otosei-ai/otosei-ai-backend/internal/api/chat"
+	"github.com/otosei-ai/otosei-ai-backend/internal/api/intent"
 	user "github.com/otosei-ai/otosei-ai-backend/internal/api/user"
 )
 
@@ -15,4 +16,6 @@ func RegisterRoutes(r *gin.Engine, deps Dependencies) {
 
 	r.POST("/api/user", user.HandleUserPost(deps.UserRepo))
 	r.GET("/api/user", user.HandleUserGet(deps.UserRepo))
+
+	r.POST("/api/intent/classify", intent.ClassifyIntentHandler(deps.OpenRouterClient))
 }

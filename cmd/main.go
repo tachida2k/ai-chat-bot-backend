@@ -30,7 +30,8 @@ func main() {
 	messageRepo := repositories.NewMessageRepository(db)
 
 	// Initialize OpenRouter client
-	openRouterClient := openrouter.NewClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL, cfg.OpenRouterModel, cfg.OpenRouterFallbacks)
+	openRouterClient := openrouter.NewClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL,
+		cfg.OpenRouterModel, cfg.OpenRouterFallbacks, cfg.ConfidenceThreshold)
 
 	dependencies := api.Dependencies{
 		UserRepo:         userRepo,
