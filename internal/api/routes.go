@@ -12,7 +12,7 @@ import (
 
 func RegisterPublicRoutes(r *gin.Engine, deps Dependencies) {
 	r.POST("/api/auth/login", auth.LoginHandler(deps.RedisClient, deps.UserRepo))
-	r.POST("/api/auth/nonce", auth.NonceHandler(deps.RedisClient))
+	r.GET("/api/auth/nonce", auth.NonceHandler(deps.RedisClient))
 }
 
 func RegisterProtectedRoutes(r *gin.RouterGroup, deps Dependencies) {
