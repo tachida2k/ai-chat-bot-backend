@@ -5,9 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/otosei-ai/otosei-ai-backend/internal/cache"
+	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
 )
 
-func RequireSession(redisClient *cache.RedisClientWrapper) gin.HandlerFunc {
+func RequireSession(redisClient *cache.RedisClientWrapper, userRepo *repositories.UserRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sessionID := c.GetHeader("X-Session-ID")
 		if sessionID == "" {
@@ -21,7 +22,14 @@ func RequireSession(redisClient *cache.RedisClientWrapper) gin.HandlerFunc {
 			return
 		}
 
+		user, err := userRepo.GetByWalletAddress(walletAddress)
+		if err != nil || user == nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
+			return
+		}
+
 		c.Set("walletAddress", walletAddress)
+		c.Set("user", user)
 		c.Next()
 	}
 }

@@ -49,9 +49,10 @@ func main() {
 
 	r := gin.Default()
 	protected := r.Group("/api")
-	admin := r.Group("/api/admin")
-	protected.Use(middleware.RequireSession(redisClient))
-	admin.Use(middleware.RequireAdmin(redisClient, userRepo))
+	protected.Use(middleware.RequireSession(redisClient, userRepo))
+
+	admin := protected.Group("/admin")
+	admin.Use(middleware.RequireAdmin())
 
 	// Register routes
 	api.RegisterPublicRoutes(r, dependencies)
