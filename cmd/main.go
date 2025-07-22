@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/otosei-ai/otosei-ai-backend/internal/api"
+	"github.com/otosei-ai/otosei-ai-backend/internal/api/middleware"
+	"github.com/otosei-ai/otosei-ai-backend/internal/cache"
 	"github.com/otosei-ai/otosei-ai-backend/internal/config"
 	"github.com/otosei-ai/otosei-ai-backend/internal/database"
 	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
@@ -28,6 +30,10 @@ func main() {
 	db := database.InitDB(cfg)
 	userRepo := repositories.NewUserRepository(db)
 	messageRepo := repositories.NewMessageRepository(db)
+	chatRepo := repositories.NewChatRepository(db)
+
+	// Initialize Redis
+	redisClient := cache.InitRedis(cfg)
 
 	// Initialize OpenRouter client
 	openRouterClient := openrouter.NewClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL,
@@ -36,13 +42,21 @@ func main() {
 	dependencies := api.Dependencies{
 		UserRepo:         userRepo,
 		MessageRepo:      messageRepo,
+		ChatRepo:         chatRepo,
 		OpenRouterClient: openRouterClient,
+		RedisClient:      redisClient,
 	}
 
 	r := gin.Default()
+	protected := r.Group("/api")
+	admin := r.Group("/api/admin")
+	protected.Use(middleware.RequireSession(redisClient))
+	admin.Use(middleware.RequireAdmin(redisClient, userRepo))
 
 	// Register routes
-	api.RegisterRoutes(r, dependencies)
+	api.RegisterPublicRoutes(r, dependencies)
+	api.RegisterAdminRoutes(admin, dependencies)
+	api.RegisterProtectedRoutes(protected, dependencies)
 
 	log.Println("Starting server on port", cfg.Port)
 	if err := r.Run(":" + cfg.Port); err != nil {
