@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/otosei-ai/otosei-ai-backend/internal/api/admin"
 	"github.com/otosei-ai/otosei-ai-backend/internal/api/auth"
 	"github.com/otosei-ai/otosei-ai-backend/internal/api/chat"
 	"github.com/otosei-ai/otosei-ai-backend/internal/api/intent"
@@ -25,5 +24,5 @@ func RegisterProtectedRoutes(r *gin.RouterGroup, deps Dependencies) {
 }
 
 func RegisterAdminRoutes(r *gin.RouterGroup, deps Dependencies) {
-	r.POST("/create-user", admin.HandleCreateUserPost(deps.UserRepo))
+	// TODO:
 }

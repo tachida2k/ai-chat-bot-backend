@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"strings"
+
 	"github.com/otosei-ai/otosei-ai-backend/internal/database/entities"
 	"gorm.io/gorm"
 )
@@ -14,8 +16,9 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 }
 
 func (r *UserRepository) GetByWalletAddress(walletAddress string) (*entities.User, error) {
+	normWalletAddress := strings.ToLower(walletAddress)
 	var user entities.User
-	err := r.DB.Where("wallet_address = ?", walletAddress).First(&user).Error
+	err := r.DB.Where("wallet_address = ?", normWalletAddress).First(&user).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, nil
 	}
@@ -23,7 +26,8 @@ func (r *UserRepository) GetByWalletAddress(walletAddress string) (*entities.Use
 }
 
 func (r *UserRepository) CreateIfNotExists(walletAddress string) (*entities.User, error) {
-	user, err := r.GetByWalletAddress(walletAddress)
+	normWalletAddress := strings.ToLower(walletAddress)
+	user, err := r.GetByWalletAddress(normWalletAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +36,8 @@ func (r *UserRepository) CreateIfNotExists(walletAddress string) (*entities.User
 	}
 
 	newUser := &entities.User{
-		WalletAddress: walletAddress,
+		WalletAddress: normWalletAddress,
+		UserType:      "user",
 	}
 	err = r.DB.Create(newUser).Error
 	if err != nil {
