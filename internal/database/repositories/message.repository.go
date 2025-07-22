@@ -1,46 +1,46 @@
 package repositories
 
 import (
-	"database/sql"
-
 	"github.com/otosei-ai/otosei-ai-backend/internal/database/entities"
+	"gorm.io/gorm"
 )
 
 type MessageRepository struct {
-	DB *sql.DB
+	DB *gorm.DB
 }
 
-func NewMessageRepository(db *sql.DB) *MessageRepository {
+func NewMessageRepository(db *gorm.DB) *MessageRepository {
 	return &MessageRepository{DB: db}
 }
 
-func (r *MessageRepository) GetByChatID(chatID int) ([]entities.Message, error) {
-	rows, err := r.DB.Query(`
-		SELECT id, chat_id, sender, content, created_at, updated_at
-		FROM messages
-		WHERE chat_id = $1
-		ORDER BY created_at ASC
-	`, chatID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
+func (r *MessageRepository) GetByChatID(chatID uint) ([]entities.Message, error) {
 	var messages []entities.Message
-	for rows.Next() {
-		var m entities.Message
-		if err := rows.Scan(&m.ID, &m.ChatID, &m.Sender, &m.Content, &m.CreatedAt, &m.UpdatedAt); err != nil {
-			return nil, err
-		}
-		messages = append(messages, m)
-	}
-	return messages, nil
+	err := r.DB.
+		Where("chat_id = ?", chatID).
+		Order("created_at ASC").
+		Find(&messages).Error
+	return messages, err
 }
 
-func (r *MessageRepository) Insert(chatID int, sender string, content string) error {
-	_, err := r.DB.Exec(`
-		INSERT INTO messages (chat_id, sender, content)
-		VALUES ($1, $2, $3)
-	`, chatID, sender, content)
-	return err
+func (r *MessageRepository) AddMessageAndTouchChat(chatID uint, sender string, content string) error {
+	tx := r.DB.Begin()
+	newMessage := &entities.Message{
+		ChatID:  chatID,
+		Sender:  sender,
+		Content: content,
+	}
+
+	if err := r.DB.Create(newMessage).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Model(&entities.Chat{}).
+		Where("id = ?", chatID).
+		Update("updated_at", gorm.Expr("NOW()")).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }

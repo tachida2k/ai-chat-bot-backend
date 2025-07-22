@@ -5,6 +5,7 @@ import "time"
 type User struct {
 	ID            uint      `gorm:"column:id;primaryKey;autoIncrement" json:"id"`
 	WalletAddress string    `gorm:"column:wallet_address;type:varchar(100);uniqueIndex;not null" json:"wallet_address"`
+	UserType      string    `gorm:"column:user_type;type:varchar(100);not null" json:"user_type"`
 	CreatedAt     time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt     time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 }

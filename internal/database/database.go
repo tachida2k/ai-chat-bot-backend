@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"time"
@@ -14,7 +13,7 @@ import (
 
 var DB *gorm.DB
 
-func InitDB(cfg *config.Config) *sql.DB {
+func InitDB(cfg *config.Config) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(cfg.PostgresDSN), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -37,5 +36,5 @@ func InitDB(cfg *config.Config) *sql.DB {
 
 	DB = db
 	fmt.Println("Connected to Postgres!")
-	return sqlDB
+	return db
 }

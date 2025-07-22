@@ -12,19 +12,17 @@ type Config struct {
 	OpenRouterModel     string
 	OpenRouterFallbacks string
 	ConfidenceThreshold string
+	RedisAddr           string
+	RedisDB             string
 	RedisUsername       string
 	RedisPassword       string
-	RedisPort           string
-	RedisURL            string
 	PostgresDSN         string
 }
 
 func LoadConfig() (*Config, error) {
-	redisUsername := getEnv("REDIS_USERNAME", "default")
-	redisPassword := getEnv("REDIS_PASSWORD", "")
-	redisPort := getEnv("REDIS_PORT", "6379")
 	redisHost := getEnv("REDIS_HOST", "localhost")
-	redisURL := fmt.Sprintf("redis://%s:%s@%s:%s", redisUsername, redisPassword, redisHost, redisPort)
+	redisPort := getEnv("REDIS_PORT", "6379")
+	redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
 
 	pgHost := getEnv("POSTGRES_HOST", "localhost")
 	pgUser := getEnv("POSTGRES_USER", "user")
@@ -41,11 +39,10 @@ func LoadConfig() (*Config, error) {
 		OpenRouterBaseURL:   getEnv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1/chat/completions"),
 		OpenRouterModel:     getEnv("OPENROUTER_MODEL", "deepseek/deepseek-r1:free"),
 		OpenRouterFallbacks: getEnv("OPENROUTER_FALLBACKS", "deepseek/deepseek-chat-v3-0324:free,google/gemma-3n-e2b-it:free"),
-		ConfidenceThreshold: getEnv("CONFIDENCE_THRESHOLD", "0.7"),
-		RedisUsername:       redisUsername,
-		RedisPassword:       redisPassword,
-		RedisPort:           redisPort,
-		RedisURL:            redisURL,
+		RedisAddr:           redisAddr,
+		RedisDB:             getEnv("REDIS_DB", "0"),
+		RedisUsername:       getEnv("REDIS_USERNAME", "default"),
+		RedisPassword:       getEnv("REDIS_PASSWORD", ""),
 		PostgresDSN:         postgresDSN,
 	}
 

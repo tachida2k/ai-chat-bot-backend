@@ -2,9 +2,13 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     wallet_address VARCHAR(100) NOT NULL UNIQUE,
+    user_type VARCHAR(100) NOT NULL DEFAULT 'user',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+
+INSERT INTO users (wallet_address, user_type)
+VALUES ('0x94ed531ed0050b0403e7ab3be7a91ef7838a6db9', 'admin');
 
 -- Create chats table
 CREATE TABLE chats (
