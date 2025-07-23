@@ -10,17 +10,15 @@ import (
 )
 
 func RegisterPublicRoutes(r *gin.Engine, deps Dependencies) {
-	r.POST("/api/auth/login", auth.LoginHandler(deps.RedisClient, deps.UserRepo))
-	r.GET("/api/auth/nonce", auth.NonceHandler(deps.RedisClient))
+	r.POST("/api/auth/login", auth.LoginHandler(deps.AuthService))
+	r.GET("/api/auth/nonce", auth.NonceHandler(deps.AuthService))
 }
 
 func RegisterProtectedRoutes(r *gin.RouterGroup, deps Dependencies) {
-	r.POST("/chat", chat.ChatHandler(deps.OpenRouterClient))
-	r.POST("/chat-stream", chat.ChatStreamHandler(deps.OpenRouterClient))
+	r.POST("/chat", chat.ChatHandler(deps.ChatService))
 
-	r.GET("/get-user", user.HandleUserGet(deps.UserRepo))
-
-	r.POST("/intent/classify", intent.ClassifyIntentHandler(deps.OpenRouterClient))
+	r.GET("/get-user", user.GetUserHandler(deps.AuthService))
+	r.POST("/intent/classify", intent.ClassifyIntentHandler(deps.IntentService))
 }
 
 func RegisterAdminRoutes(r *gin.RouterGroup, deps Dependencies) {

@@ -4,14 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
+	"github.com/otosei-ai/otosei-ai-backend/internal/services"
 )
 
 type classifyRequest struct {
 	Prompt string `json:"prompt"`
 }
 
-func ClassifyIntentHandler(client *openrouter.OpenRouterClient) gin.HandlerFunc {
+func ClassifyIntentHandler(intentService *services.IntentService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req classifyRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
@@ -19,7 +19,7 @@ func ClassifyIntentHandler(client *openrouter.OpenRouterClient) gin.HandlerFunc 
 			return
 		}
 
-		result, err := client.ClassifyIntent(req.Prompt)
+		result, err := intentService.ClassifyIntent(req.Prompt)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return

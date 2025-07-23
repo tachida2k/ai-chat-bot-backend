@@ -1,25 +1,13 @@
 package auth
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/otosei-ai/otosei-ai-backend/internal/cache"
+	"github.com/otosei-ai/otosei-ai-backend/internal/services"
 )
 
-func generateNonce() (string, error) {
-	b := make([]byte, 16)
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(b), nil
-}
-
-func NonceHandler(redisClient *cache.RedisClientWrapper) gin.HandlerFunc {
+func NonceHandler(authService *services.AuthService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		wallet := c.Query("walletAddress")
 		if wallet == "" {
@@ -27,13 +15,7 @@ func NonceHandler(redisClient *cache.RedisClientWrapper) gin.HandlerFunc {
 			return
 		}
 
-		nonce, err := generateNonce()
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate nonce"})
-			return
-		}
-
-		err = redisClient.SetNonce(wallet, nonce, 5*time.Minute)
+		nonce, err := authService.GenerateAndStoreNonce(wallet)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to store nonce"})
 			return

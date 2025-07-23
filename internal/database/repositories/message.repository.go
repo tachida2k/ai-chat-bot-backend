@@ -22,6 +22,16 @@ func (r *MessageRepository) GetByChatID(chatID uint) ([]entities.Message, error)
 	return messages, err
 }
 
+func (r *MessageRepository) AddMessage(chatID uint, sender string, content string) error {
+	newMessage := &entities.Message{
+		ChatID:  chatID,
+		Sender:  sender,
+		Content: content,
+	}
+
+	return r.DB.Create(newMessage).Error
+}
+
 func (r *MessageRepository) AddMessageAndTouchChat(chatID uint, sender string, content string) error {
 	tx := r.DB.Begin()
 	newMessage := &entities.Message{

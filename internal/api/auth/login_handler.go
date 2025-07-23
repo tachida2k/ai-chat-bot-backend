@@ -2,14 +2,9 @@ package auth
 
 import (
 	"net/http"
-	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"github.com/otosei-ai/otosei-ai-backend/internal/cache"
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
-	"github.com/otosei-ai/otosei-ai-backend/pkg/utils"
+	"github.com/otosei-ai/otosei-ai-backend/internal/services"
 )
 
 type LoginRequest struct {
@@ -18,7 +13,7 @@ type LoginRequest struct {
 	Signature     string `json:"signature"`
 }
 
-func LoginHandler(redisClient *cache.RedisClientWrapper, userRepo *repositories.UserRepository) gin.HandlerFunc {
+func LoginHandler(authService *services.AuthService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req LoginRequest
 		if err := c.ShouldBindJSON(&req); err != nil {
@@ -26,32 +21,9 @@ func LoginHandler(redisClient *cache.RedisClientWrapper, userRepo *repositories.
 			return
 		}
 
-		// Get expected nonce from Redis
-		expectedNonce, err := redisClient.GetNonce(req.WalletAddress)
-		if err != nil || expectedNonce == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "missing or expired nonce"})
-			return
-		}
-
-		// Verify signature
-		recoveredAddress, err := utils.RecoverAddressFromSignature(req.Message, req.Signature)
-		if err != nil || !strings.EqualFold(recoveredAddress, req.WalletAddress) {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid signature"})
-			return
-		}
-
-		_, err = userRepo.CreateIfNotExists(req.WalletAddress)
+		sessionID, _, err := authService.HandleLogin(req.WalletAddress, req.Message, req.Signature)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create user"})
-			return
-		}
-
-		// Create session ID
-		sessionID := uuid.New().String()
-
-		// Store session in Redis
-		if err := redisClient.SetSession(sessionID, req.WalletAddress, 12*time.Hour); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to store session"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return
 		}
 

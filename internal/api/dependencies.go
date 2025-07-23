@@ -1,15 +1,11 @@
 package api
 
 import (
-	"github.com/otosei-ai/otosei-ai-backend/internal/cache"
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
-	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
+	"github.com/otosei-ai/otosei-ai-backend/internal/services"
 )
 
 type Dependencies struct {
-	UserRepo         *repositories.UserRepository
-	MessageRepo      *repositories.MessageRepository
-	ChatRepo         *repositories.ChatRepository
-	OpenRouterClient *openrouter.OpenRouterClient
-	RedisClient      *cache.RedisClientWrapper
+	ChatService   *services.ChatService
+	AuthService   *services.AuthService
+	IntentService *services.IntentService
 }

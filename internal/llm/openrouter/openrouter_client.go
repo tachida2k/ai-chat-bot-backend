@@ -31,14 +31,6 @@ type ChatResponse struct {
 	} `json:"choices"`
 }
 
-type ChatStreamResponse struct {
-	Choices []struct {
-		Delta struct {
-			Content string `json:"content"`
-		} `json:"delta"`
-	} `json:"choices"`
-}
-
 func NewClient(apiKey, baseURL, model, fallbackRaw, confidenceThreshold string) *OpenRouterClient {
 	var fallbacks []string
 	if fallbackRaw != "" {

@@ -49,7 +49,7 @@ func (c *OpenRouterClient) sendChatRequest(messages []Message, model string) (st
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
-		return "", fmt.Errorf("non-200 response from OpenRouter: %d - %s", resp.StatusCode, string(body))
+		return "", fmt.Errorf("non-200 response from LLM: %d - %s", resp.StatusCode, string(body))
 	}
 
 	var res ChatResponse

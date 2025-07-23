@@ -12,6 +12,7 @@ import (
 	"github.com/otosei-ai/otosei-ai-backend/internal/database"
 	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
 	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
+	"github.com/otosei-ai/otosei-ai-backend/internal/services"
 )
 
 func main() {
@@ -39,17 +40,18 @@ func main() {
 	openRouterClient := openrouter.NewClient(cfg.OpenRouterAPIKey, cfg.OpenRouterBaseURL,
 		cfg.OpenRouterModel, cfg.OpenRouterFallbacks, cfg.ConfidenceThreshold)
 
+	// Initialize services
+	chatService := services.NewChatService(chatRepo, messageRepo, openRouterClient)
+	authService := services.NewAuthService(userRepo, redisClient)
+
 	dependencies := api.Dependencies{
-		UserRepo:         userRepo,
-		MessageRepo:      messageRepo,
-		ChatRepo:         chatRepo,
-		OpenRouterClient: openRouterClient,
-		RedisClient:      redisClient,
+		ChatService: chatService,
+		AuthService: authService,
 	}
 
 	r := gin.Default()
 	protected := r.Group("/api")
-	protected.Use(middleware.RequireSession(redisClient, userRepo))
+	protected.Use(middleware.RequireSession(authService))
 
 	admin := protected.Group("/admin")
 	admin.Use(middleware.RequireAdmin())
