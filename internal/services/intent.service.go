@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/llm/openrouter"
 )
 
 type IntentService struct {

@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/otosei-ai/otosei-ai-backend/internal/config"
 	"github.com/redis/go-redis/v9"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/config"
 )
 
 type RedisClientWrapper struct {

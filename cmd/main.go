@@ -5,14 +5,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/otosei-ai/otosei-ai-backend/internal/api"
-	"github.com/otosei-ai/otosei-ai-backend/internal/api/middleware"
-	"github.com/otosei-ai/otosei-ai-backend/internal/cache"
-	"github.com/otosei-ai/otosei-ai-backend/internal/config"
-	"github.com/otosei-ai/otosei-ai-backend/internal/database"
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
-	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
-	"github.com/otosei-ai/otosei-ai-backend/internal/services"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/api"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/api/middleware"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/cache"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/config"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/database"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/database/repositories"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/llm/openrouter"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/services"
 )
 
 func main() {

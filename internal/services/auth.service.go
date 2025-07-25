@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/otosei-ai/otosei-ai-backend/internal/cache"
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/entities"
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
-	"github.com/otosei-ai/otosei-ai-backend/pkg/utils"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/cache"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/database/entities"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/database/repositories"
+	"github.com/tachida2k/ai-chat-bot-backend/pkg/utils"
 )
 
 type AuthService struct {

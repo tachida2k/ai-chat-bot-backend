@@ -3,9 +3,9 @@ package services
 import (
 	"strings"
 
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/entities"
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/repositories"
-	"github.com/otosei-ai/otosei-ai-backend/internal/llm/openrouter"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/database/entities"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/database/repositories"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/llm/openrouter"
 )
 
 type ChatService struct {

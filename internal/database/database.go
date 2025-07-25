@@ -8,7 +8,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/otosei-ai/otosei-ai-backend/internal/config"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/config"
 )
 
 var DB *gorm.DB

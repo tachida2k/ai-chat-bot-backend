@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/otosei-ai/otosei-ai-backend/internal/services"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/services"
 )
 
 type Dependencies struct {

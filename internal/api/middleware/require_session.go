@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/otosei-ai/otosei-ai-backend/internal/services"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/services"
 )
 
 func RequireSession(sessionService *services.AuthService) gin.HandlerFunc {

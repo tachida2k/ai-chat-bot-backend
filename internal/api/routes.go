@@ -3,10 +3,10 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/otosei-ai/otosei-ai-backend/internal/api/auth"
-	"github.com/otosei-ai/otosei-ai-backend/internal/api/chat"
-	"github.com/otosei-ai/otosei-ai-backend/internal/api/intent"
-	"github.com/otosei-ai/otosei-ai-backend/internal/api/user"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/api/auth"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/api/chat"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/api/intent"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/api/user"
 )
 
 func RegisterPublicRoutes(r *gin.Engine, deps Dependencies) {

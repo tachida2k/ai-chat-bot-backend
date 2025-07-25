@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"github.com/otosei-ai/otosei-ai-backend/internal/database/entities"
+	"github.com/tachida2k/ai-chat-bot-backend/internal/database/entities"
 	"gorm.io/gorm"
 )
 

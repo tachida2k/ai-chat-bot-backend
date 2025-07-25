@@ -1,1 +1,1 @@
-# Otosei AI Backend
+# AI chatbot Backend

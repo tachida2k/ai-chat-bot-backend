@@ -1,4 +1,4 @@
-module github.com/otosei-ai/otosei-ai-backend
+module github.com/tachida2k/ai-chat-bot-backend
 
 go 1.24.3
 
